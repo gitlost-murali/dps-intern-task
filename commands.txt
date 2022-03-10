@@ -1,0 +1,43 @@
+gcloud auth list
+
+gcloud config list project
+
+echo $GOOGLE_CLOUD_PROJECT
+
+gcloud services enable compute.googleapis.com         \
+                       containerregistry.googleapis.com  \
+                       aiplatform.googleapis.com
+
+BUCKET_NAME=gs://$GOOGLE_CLOUD_PROJECT-bucket
+gsutil mb -l us-central1 $BUCKET_NAME
+
+alias python=python3
+
+mkdir mpg
+cd mpg
+touch Dockerfile
+mkdir trainer
+touch trainer/train.py
+
+
+sed -i "s|BUCKET_NAME|$BUCKET_NAME|g" trainer/train.py
+
+IMAGE_URI="gcr.io/$GOOGLE_CLOUD_PROJECT/mpg:v1"
+
+docker build ./ -t $IMAGE_URI
+
+docker push $IMAGE_URI
+
+pip3 install google-cloud-aiplatform --upgrade --user
+
+cd ~
+
+python3 deploy.py | tee deploy-output.txt
+
+ENDPOINT=$(cat deploy-output.txt | sed -nre 's:.*Resource name\: (.*):\1:p' | tail -1)
+sed -i "s|ENDPOINT_STRING|$ENDPOINT|g" predict.py
+
+python3 predict.py
+
+
+https://us-central1-aiplatform.googleapis.com/v1/projects/poetic-hexagon-343617/locations/us-central1/endpoints/6779228057052905472:predict

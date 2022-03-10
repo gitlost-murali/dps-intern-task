@@ -2,6 +2,8 @@
 Google's VertexAI demo
 
 
+Commands are provided in `commands.txt`. Scripts (train.py, Dockerfile, deploy.py, predict.py) are directly available here in this repo.
+
 ## Step-1: Create Project
 
 ![Create Project](images/create-proj.png)
