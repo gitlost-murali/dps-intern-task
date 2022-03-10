@@ -28,7 +28,7 @@ __Push the Docker to container registry__
 
 ![Create endpoint](images/model-deployed-cmdout.png)
 
-![create-endpoint-ui](images/model-deployed-cmdout.png)
+![create-endpoint-ui](images/model-deployed.png)
 
 ## Step-5: Predict
 
